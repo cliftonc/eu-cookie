@@ -25,7 +25,8 @@
         acceptTimeout: 15,    
         policyUrl: 'policy.html',
         color: {
-          background: '#549898'
+          background: '#549898',
+          text: 'yellow'
         },
         cookie: {
           key:'EUC-EXAMPLE2'
@@ -38,7 +39,7 @@
         position:'relative'
     }
 &lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;path/to/eu-cookie.min.js&quot;&gt;&lt;/script&gt; 
+&lt;script type=&quot;text/javascript&quot; src=&quot;path/to/eu-cookie.min.js&quot;&gt;&lt;/script&gt; 
 </code></pre>
         <p>Clearly, if you accept, you need to delete your cookies for this site for it to continue to appear again!</p>
         <a href='index.html'>Back to index ...</a> | <a href='#' onClick='(function() { cookieUtils.removeItem("EUC-EXAMPLE2"); window.location = document.location; })()'>Clear cookie ...</a>
@@ -58,7 +59,8 @@
             key:'EUC-EXAMPLE2'
         },
         color: {
-          background: '#549898'
+          background: '#549898',
+          text: 'yellow'
         },
         copy: {
           accept:'',
@@ -68,6 +70,6 @@
         position:'relative'
     }
     </script>
-    <script type="text/javascript" async="" src="https://raw.github.com/cliftonc/eu-cookie/master/eu-cookie.js"></script>  
+    <script type="text/javascript" src="https://raw.github.com/cliftonc/eu-cookie/master/eu-cookie.js"></script>  
   </body>
 </html>
