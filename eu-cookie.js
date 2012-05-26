@@ -279,7 +279,7 @@
        var cookieValue = Utils.cookies.getItem(options.cookie.key);
        if(cookieValue !== 'accepted') {
          var shownCount = cookieValue ? parseInt(cookieValue) : 0;
-         if(options.frequencyCap && shownCount < options.frequencyCap) {
+         if(!options.frequencyCap || options.frequencyCap && shownCount < options.frequencyCap) {
            Utils.cookies.setItem(options.cookie.key,(shownCount + 1), options.cookie.expires*24*60*60, options.cookie.path, options.cookie.domain, options.cookie.secureOnly);
            Main.createNotification(options);
          }
