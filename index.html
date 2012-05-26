@@ -64,7 +64,13 @@
       linkHover:'#EFEFAF'
     },
     topOrBottom:'bottom',
-    position:'fixed'    
+    position:'fixed',
+    callbacks: {
+      onVisible: function() {},
+      onAccept: function() {},
+      onClose: function() {},
+      onInfo: function() {}
+    }      
   }
 </code></pre>
 <p>The values above are the defaults.  You only need to specify the values that you would like to over-ride in the defaults (see the examples).
