@@ -15,7 +15,7 @@
     <div class="wrapper">
       <header>
         <h1>Eu-cookie</h1>
-        <p>At top of page, relative (with push down), notice changed, acceptance link removed, with automatic acceptance after 15 seconds (wait for it!).</p>      
+        <p>At top of page, relative (with push down), notice changed, acceptance link removed, different color, with automatic acceptance after 15 seconds (wait for it!).</p>      
       </header>
       <section>
         <h1>Example 2</h1>
@@ -23,6 +23,9 @@
     window.EUCMOptions = {      
         acceptTimeout: 15,    
         policyUrl: 'policy.html',
+        color: {
+          background: '#549898'
+        },
         cookie: {
           key:'EUC-EXAMPLE2'
         },
@@ -52,6 +55,9 @@
         policyUrl: 'policy.html',
         cookie: {
             key:'EUC-EXAMPLE2'
+        },
+        color: {
+          background: '#549898'
         },
         copy: {
           accept:'',
