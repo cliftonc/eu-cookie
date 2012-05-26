@@ -26,12 +26,46 @@
       </header>
       <section>
         <h1>Simple EU Cookie Banner</h1>
-
-<ul>
-<li><a href='example1.html'>Default values.</a></li>
-<li><a href='example2.html'>At top of page, relative (with push down), with automatic acceptance after 15 seconds.</a></li>
-<li><a href='example3.html'>At bottom of page, fixed, frequency capped (try refreshing more than 3 times).</a></li>
-</ul>
+        <ul>
+        <li><a href='example1.html'>Default values.</a></li>
+        <li><a href='example2.html'>At top of page, relative (with push down), with automatic acceptance after 15 seconds.</a></li>
+        <li><a href='example3.html'>At bottom of page, fixed, frequency capped (try refreshing more than 3 times).</a></li>
+        </ul>
+        <h2>Availalbe configuration parameters</h2>
+        <p>You can configure the script by setting options into the parameter 'window.EUCMOptions' as such:</p>
+        <pre class="source-code"><code>
+  window.EUCMOptions = {
+    elementId: '',
+    acceptTimeout: 15,    
+    frequencyCap: 3,
+    policyUrl:'/privacypolicy',
+    cookie: {
+      key: 'eu-cookie-acceptance',
+      expires: 30,
+      path: '/',
+      domain: '',
+      secureOnly: false
+    },
+    copy: {
+      notice:'This site uses cookies.  By continuing to browse the site you are agreeing to our use of cookies:',
+      accept:'Accept and hide this notice',
+      acceptTooltip:'Click here to accept this and close this notice ...',
+      info:'Find out more information here',
+      infoTooltip:'Click here to find out more information about how we use cookies ...',
+      close:'X',
+      closeTooltip:'Click here to accept this and close this notice'
+    },
+    color: {
+      background:'#3F3F3F',      
+      text:'#DFDFDF',
+      link:'#FFFFFF',
+      linkHover:'#EFEFAF'
+    },
+    topOrBottom:'bottom',
+    position:'fixed'    
+  }
+</code></pre>
+<p>The values above are the defaults.  You only need to specify the values that you would like to over-ride in the defaults (see the examples).
       </section>
       <footer>
         <p>This project is maintained by <a href="https://github.com/cliftonc">cliftonc</a></p>
