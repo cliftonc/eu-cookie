@@ -270,6 +270,9 @@
           }
         }
 
+        // Call callback
+        if(typeof options.callbacks.onVisible === 'function') options.callbacks.onVisible();
+
         // Set the timeout for autoaccept
         if(options.acceptTimeout) setTimeout(Main.acceptFn, options.acceptTimeout*1000);
 
@@ -290,11 +293,14 @@
       acceptFn: function() {  
         Utils.cookies.setItem(options.cookie.key, 'accepted', options.cookie.expires*24*60*60, options.cookie.path, options.cookie.domain, options.cookie.secureOnly);
         UIRoot.removeChild(UIContainer);
+        if(typeof options.callbacks.onAccept === 'function') options.callbacks.onAccept();
       },
       infoFn: function() {
+        if(typeof options.callbacks.onInfo === 'function') options.callbacks.onInfo();
         window.location = options.policyUrl;
       },
       closeFn: function() {
+        if(typeof options.callbacks.onClose === 'function') options.callbacks.onClose();
         Main.acceptFn(); // Just do the same as accept   
       }
     }
@@ -331,7 +337,13 @@
       linkHover:'#EFEFAF'
     },
     topOrBottom:'bottom',
-    position:'fixed'    
+    position:'fixed',
+    callbacks: {
+      onVisible: function() {},
+      onAccept: function() {},
+      onClose: function() {},
+      onInfo: function() {}
+    }  
   }
 
   // Over ride defaults with options
