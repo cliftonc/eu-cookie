@@ -305,8 +305,8 @@
 
   var options = {
     elementId: '',
-    acceptTimeout: 15,    
-    frequencyCap: 3,
+    acceptTimeout: 0,    
+    frequencyCap: 0,
     policyUrl:'/privacypolicy',
     cookie: {
       key: 'eu-cookie-acceptance',
