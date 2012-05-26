@@ -45,6 +45,7 @@ a small {
 }
 
 .wrapper {
+  padding-top: 50px;
   width:860px;
   margin:0 auto;
 }
