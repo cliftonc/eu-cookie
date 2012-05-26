@@ -1,0 +1,58 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>Eu-cookie by cliftonc</title>
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>Eu-cookie</h1>
+        <p>At top of page, relative (with push down), with automatic acceptance after 15 seconds (wait for it!).</p>      
+      </header>
+      <section>
+        <h1>Example 2</h1>
+<pre class="source-code"><code>&lt;script&gt;
+    window.EUCMOptions = {      
+        acceptTimeout: 15,    
+        policyUrl: 'policy.html',
+        cookie: {
+            key:'EUC-EXAMPLE2'
+        },
+        topOrBottom:'top',
+        position:'relative'
+    }
+&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot; async=&quot;&quot; src=&quot;path/to/eu-cookie.min.js&quot;&gt;&lt;/script&gt; 
+</code></pre>
+        <p>Clearly, if you accept, you need to delete your cookies for this site for it to continue to appear again!</p>
+        <a href='index.html'>Back to index ...</a>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/cliftonc">cliftonc</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>   
+    <!-- EXAMPLE 1 -->
+    <script>
+    window.EUCMOptions = {
+        acceptTimeout: 15,    
+        policyUrl: 'policy.html',
+        cookie: {
+            key:'EUC-EXAMPLE2'
+        },
+        topOrBottom:'top',
+        position:'relative'
+    }
+    </script>
+    <script type="text/javascript" async="" src="https://raw.github.com/cliftonc/eu-cookie/master/eu-cookie.js"></script>  
+  </body>
+</html>
