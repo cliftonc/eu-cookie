@@ -36,7 +36,10 @@
           accept:''
         },
         topOrBottom:'top',
-        position:'relative'
+        position:'relative',
+        callbacks: {
+          onAccept: function() { alert('Accepted.'); }
+        }
     }
 &lt;/script&gt;
 &lt;script type=&quot;text/javascript&quot; src=&quot;path/to/eu-cookie.min.js&quot;&gt;&lt;/script&gt; 
@@ -67,7 +70,10 @@
           notice:'This is a custom notice, say whatever you like!',
         },
         topOrBottom:'top',
-        position:'relative'
+        position:'relative',
+        callbacks: {
+         onAccept: function() { alert('Accepted.'); }
+        }
     }
     </script>
     <script type="text/javascript" src="https://raw.github.com/cliftonc/eu-cookie/master/eu-cookie.js"></script>  
