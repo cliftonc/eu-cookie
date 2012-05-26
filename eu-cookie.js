@@ -236,8 +236,8 @@
         Utils.setText(euClose, options.copy.close);
         euClose.setAttribute('title',options.copy.closeTooltip);
         Utils.applyStyles(euClose,{
-          'float':'right',
-          cssFloat:'right', // for IE and FF
+          styleFloat:'right', // For older IE
+          cssFloat:'right',
           marginRight:'20px',
           color: options.color.link,
           fontWeight:'bolder',
