@@ -149,8 +149,7 @@
      * IDs are used for speed 
      */
     var Templates = {
-      html:"\
-<style> \
+      css:"\
  #<%= idPrefix %>container { \
     position: <%= position %>; \
     <%= topOrBottom === 'bottom' ? 'bottom: 0px;' : 'top: 0px' %>; \
@@ -190,7 +189,8 @@
     margin-right:20px; \
     float: right;\
  }\
-</style>\
+",
+html:"\
 <div id='<%= idPrefix %>container'>\
   <span><%= copy.notice %></span>  \
   <a href='#' title='<%= copy.infoTooltip %>' id='<%= idPrefix %>info'><%= copy.info %></a> \
@@ -206,20 +206,35 @@
          
         UIRoot = options && options.elementId ? document.getElementById(options.elementID) : document.body;
 
-        var template = Utils.template(Templates.html),
-            content = template(options);
+        var html = Utils.template(Templates.html),
+            css = Utils.template(Templates.css),
+            contentHtml = html(options),
+            contentCss = css(options);
         
+        // Always add the style to the head
+        var head = document.getElementsByTagName('head')[0],
+            style = document.createElement('style'),
+            rules = document.createTextNode(contentCss);
+            
+        style.type = 'text/css';
+        if(style.styleSheet) {
+          style.styleSheet.cssText = rules.nodeValue;
+        } else {
+          style.appendChild(rules);
+        } 
+        head.appendChild(style);
+
         // Add the content to the page
         if(options.position === 'relative' && options.topOrBottom === 'top') {  
           
           // If we are relative at top, push down        
-          UIRoot.innerHTML = content + UIRoot.innerHTML;
+          UIRoot.innerHTML = contentHtml + UIRoot.innerHTML;
           UIContainer = document.getElementById(options.idPrefix+'container');
 
         } else {
 
           // Just add the content at the bottom     
-          UIRoot.innerHTML += content;
+          UIRoot.innerHTML += contentHtml;
           UIContainer = document.getElementById(options.idPrefix+'container');          
                     
         } 
