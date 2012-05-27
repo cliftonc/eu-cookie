@@ -35,30 +35,6 @@
           },
           hasItem: function (sKey) { return (new RegExp("(?:^|;\\s*)" + escape(sKey).replace(/[\-\.\+\*]/g, "\\$&") + "\\s*\\=")).test(document.cookie); }
       },
-      applyStyles: function (element, styles) {
-        if (element && element.style) {
-          for (var prop in styles) {
-            if (styles.hasOwnProperty(prop)) {
-              element.style[prop] = styles[prop];
-            }
-          }
-        }
-      },
-      createElement: function (id, className) {
-        var element = Utils.newElement();
-        if (arguments[0] !== "") {
-          element.setAttribute("id", arguments[0]);
-        }
-        else if (arguments[1]) {
-          this.addClassName(element, className);
-        }
-        return element;
-      },
-      newElement: function (type) {
-        if (!type) type = "div";
-        var element = document.createElement(type);      
-        return element;
-      },
       setText: function (element, textString) {
         //remove existing textNode if there is one
         if (element) {
@@ -72,16 +48,6 @@
         }
         else if (element.attachEvent) {
           element.attachEvent('onclick', fn);
-        }
-      },
-      addHover: function (element, overFn, outFn) {
-        if (element.addEventListener) {
-          element.addEventListener('mouseover', overFn, false);
-          element.addEventListener('mouseout', outFn, false);
-        }
-        else if (element.attachEvent) {
-          element.attachEvent('onmouseover', overFn);
-          element.attachEvent('onmouseout', outFn);
         }
       },
       removeChildren: function (element) {
@@ -100,176 +66,168 @@
               to[key] = Utils.copy(from[key], to[key]);    
           return to;
       },
-      animate: function (element, props, duration, callback) {
-        var prop,
-          initialVal,
-          finalVal,
-          interval = 16,
-          measureProp;
-        for (prop in props) {
-          switch (prop) {
-            case "height": measureProp = "offsetHeight";
-              break;
-            case "width": measureProp = "offsetWidth";
-              break;
-          }
-          initialVal = element[measureProp];
-          finalVal = props[prop];
-        }
+      template: function(text, data) {
+        
+        // Create a template
 
-        var delta = Math.abs(finalVal - initialVal),
-          numFrames = Math.floor(duration / interval),
-          increment = delta / numFrames;
+        // By default, Underscore uses ERB-style template delimiters, change the
+        // following template settings to use alternative delimiters.
+        var settings = {
+          evaluate    : /<%([\s\S]+?)%>/g,
+          interpolate : /<%=([\s\S]+?)%>/g,
+          escape      : /<%-([\s\S]+?)%>/g
+        };
 
-          var shrinking = finalVal < initialVal;
+        // When customizing `templateSettings`, if you don't want to define an
+        // interpolation, evaluation or escaping regex, we need one that is
+        // guaranteed not to match.
+        var noMatch = /.^/;
 
+        // Certain characters need to be escaped so that they can be put into a
+        // string literal.
+        var escapes = {
+          '\\':   '\\',
+          "'":    "'",
+          r:      '\r',
+          n:      '\n',
+          t:      '\t',
+          u2028:  '\u2028',
+          u2029:  '\u2029'
+        };
 
-          var frame = setInterval(function () {
-            if (shrinking) {
-              if ((element[measureProp] - increment) > finalVal) {
-                var newVal = (element[measureProp] - increment) + "px";
-                element.style[prop] = newVal;
-              }
-              else {
-                element.style[prop] = finalVal + "px";
-                clearInterval(frame);
-                if (callback) {
-                  callback();
-                }
-              }
-            }
-            else {
-              if ((element[measureProp] + increment) < finalVal) {
-                var newVal = (element[measureProp] + increment) + "px";
-                element.style[prop] = newVal;
-              }
-              else {
-                element.style[prop] = finalVal + "px";
-                clearInterval(frame);
-                if (callback) {
-                  callback();
-                }
-              }
-            }
-          }, interval);
+        for (var key in escapes) escapes[escapes[key]] = key;
+        var escaper = /\\|'|\r|\n|\t|\u2028|\u2029/g;
+        var unescaper = /\\(\\|'|r|n|t|u2028|u2029)/g;
+
+        // Within an interpolation, evaluation, or escaping, remove HTML escaping
+        // that had been previously added.
+        var unescape = function(code) {
+          return code.replace(unescaper, function(match, escape) {
+            return escapes[escape];
+          });
+        };
+
+        // Compile the template source, taking care to escape characters that
+        // cannot be included in a string literal and then unescape them in code
+        // blocks.
+        var source = "__p+='" + text
+          .replace(escaper, function(match) {
+            return '\\' + escapes[match];
+          })
+          .replace(settings.escape || noMatch, function(match, code) {
+            return "'+\n((__t=(" + unescape(code) + "))==null?'':_.escape(__t))+\n'";
+          })
+          .replace(settings.interpolate || noMatch, function(match, code) {
+            return "'+\n((__t=(" + unescape(code) + "))==null?'':__t)+\n'";
+          })
+          .replace(settings.evaluate || noMatch, function(match, code) {
+            return "';\n" + unescape(code) + "\n__p+='";
+          }) + "';\n";
+
+        // If a variable is not specified, place data values in local scope.
+        if (!settings.variable) source = 'with(obj||{}){\n' + source + '}\n';
+
+        source = "var __t,__p='',__j=Array.prototype.join," +
+          "print=function(){__p+=__j.call(arguments,'')};\n" +
+          source + "return __p;\n";
+
+        var render = new Function(settings.variable || 'obj', '_', source);
+        if (data) return render(data);
+        var template = function(data) {
+          return render.call(this, data);
+        };
+
+        // Provide the compiled function source as a convenience for precompilation.
+        template.source = 'function(' + (settings.variable || 'obj') + '){\n' + source + '}';
+
+        return template;
+
       }
     };
 
+    /**
+     * IDs are used for speed 
+     */
+    var Templates = {
+      html:"\
+        <style> \
+           #<%= idPrefix %>container { \
+              position: <%= position %>; \
+              <%= topOrBottom === 'bottom' ? 'bottom: 0px;' : 'top: 0px' %>; \
+              left: 0px; \
+              padding: 10px; \
+              width: 100%; \
+              background-color: <%= color.background %>; \
+              font-family: Arial, sans-serif; \
+              font-size: 13px; \
+              font-weight: normal; \
+              color: <%= color.text %>; \
+              letter-spacing: 0.5px; \
+              webkit-user-select: none; \
+              moz-user-select: none; \
+              user-select: none; \
+              z-index: 100;     \
+           }  \
+           #<%= idPrefix %>container a { \
+              color: <%= color.link %>; \
+              text-decoration: none; \
+           }\
+           #<%= idPrefix %>container a:hover { \
+              color: <%= color.linkHover%>; \
+           }\
+           #<%= idPrefix %>info { \
+              display: <%= copy.info ? 'inline' : 'none' %>;\
+              margin-left: 20px;\
+           }\
+           #<%= idPrefix %>accept { \
+              display: <%= copy.accept ? 'inline' : 'none' %>;\
+              padding-left: 10px;\
+              margin-left: 10px;\
+           }\
+           #<%= idPrefix %>close { \
+              display: <%= copy.close ? 'inline' : 'none' %>;\
+              font-weight: bold;\
+              margin-right:20px; \
+              float: right;\
+           }\
+        </style>\
+        <div id='<%= idPrefix %>container'>\
+          <span><%= copy.notice %></span>  \
+          <a href='#' title='<%= copy.infoTooltip %>' id='<%= idPrefix %>info'><%= copy.info %></a> \
+          <a href='#' title='<%= copy.acceptTooltip %>' id='<%= idPrefix %>accept'><%= copy.accept %></a> \
+          <a href='#' title='<%= copy.closeTooltip %>' id='<%= idPrefix %>close'><%= copy.close %></a> \
+        </div> \
+      "
+    }
 
     var Main = {
       utils: Utils,
       createNotification: function(options) {
          
         UIRoot = options && options.elementId ? document.getElementById(options.elementID) : document.body;
+
+        var template = Utils.template(Templates.html),
+            content = template(options);
         
-        UIContainer = Utils.createElement('eu-directive-container');
-        Utils.applyStyles(UIContainer,{
-          position:options.position,
-          bottom: options.topOrBottom === 'bottom' ? '-40px' : '',
-          top: options.topOrBottom === 'top' ? '-40px' : '',
-          left:'0px',         
-          padding:'10px',
-          margin:'0px',
-          width:'100%',
-          backgroundColor: options.color.background,
-          fontFamily: "Arial, sans-serif",
-          fontSize:'13px',
-          fontWeight: "normal",
-          color: options.color.text,
-          letterSpacing: "0.5px",
-          webkitUserSelect: "none", 
-          mozUserSelect: "none",
-          userSelect: "none",
-          zIndex: '100'         
-        });      
+        // Add the content to the page
+        if(options.position === 'relative' && options.topOrBottom === 'top') {  
+          
+          // If we are relative at top, push down        
+          UIRoot.innerHTML = content + UIRoot.innerHTML;
+          UIContainer = document.getElementById(options.idPrefix+'container');
 
-        var euText = Utils.newElement('span');
-        Utils.setText(euText, options.copy.notice);  
-        UIContainer.appendChild(euText);
-              
-        var euMoreInfo = Utils.newElement('a');
-        Utils.setText(euMoreInfo, options.copy.info);
-        Utils.addClickHandler(euMoreInfo, Main.infoFn);
-        Utils.applyStyles(euMoreInfo,{
-          marginLeft:'20px',
-          color: options.color.link,
-          cursor: 'pointer'
-        });
-        euMoreInfo.setAttribute('title',options.copy.infoTooltip);
-        Utils.addHover(euMoreInfo,function() {
-          Utils.applyStyles(this,{
-            color:options.color.linkHover
-          });
-        },function() {
-          Utils.applyStyles(this,{
-            color:options.color.link
-          });
-        })
-        UIContainer.appendChild(euMoreInfo);
-        
-
-        if(options.copy.accept) {
-          var euAccept = Utils.newElement('a');        
-          Utils.setText(euAccept, options.copy.accept);
-          euAccept.setAttribute('title',options.copy.acceptTooltip);
-          Utils.addClickHandler(euAccept, Main.acceptFn);
-          Utils.applyStyles(euAccept,{
-            marginLeft:'20px',
-            paddingLeft:'20px',
-            color: options.color.link,
-            borderLeft:'solid 1px silver',
-            cursor: 'pointer'
-          });    
-          Utils.addHover(euAccept,function() {
-            Utils.applyStyles(this,{
-              color: options.color.linkHover
-            });
-          },function() {
-            Utils.applyStyles(this,{
-              color: options.color.link
-            });
-          })
-          UIContainer.appendChild(euAccept);
-        }
-
-        var euClose = Utils.newElement('a');
-        Utils.setText(euClose, options.copy.close);
-        euClose.setAttribute('title',options.copy.closeTooltip);
-        Utils.applyStyles(euClose,{
-          styleFloat:'right', // For older IE
-          cssFloat:'right',
-          marginRight:'20px',
-          color: options.color.link,
-          fontWeight:'bolder',
-          cursor: 'pointer'
-        });  
-        Utils.addHover(euClose,function() {
-          Utils.applyStyles(this,{
-            color:options.color.linkHover
-          });
-        },function() {
-          Utils.applyStyles(this,{
-            color:options.color.link
-          });
-        })         
-        Utils.addClickHandler(euClose, Main.closeFn);
-        UIContainer.appendChild(euClose);
-
-        // Append
-        Utils.showElement(UIContainer);
-        // If we are relative at top, try to animate in
-        if(options.position === 'relative' && options.topOrBottom === 'top') {          
-          UIRoot.insertBefore(UIContainer, UIRoot.firstChild);
-          Utils.animate(UIContainer, {top:0}, 200);
         } else {
-          // Just stick it in the dom
-          UIRoot.appendChild(UIContainer); 
-          if(options.topOrBottom === 'top') {
-            Utils.animate(UIContainer, {top:0}, 200);     
-          } else {
-            Utils.animate(UIContainer, {bottom:0}, 200);     
-          }
-        }
+
+          // Just add the content at the bottom     
+          UIRoot.innerHTML += content;
+          UIContainer = document.getElementById(options.idPrefix+'container');          
+                    
+        } 
+
+        // Wire up our click handlers
+        Utils.addClickHandler(document.getElementById(options.idPrefix+'accept'), Main.acceptFn);
+        Utils.addClickHandler(document.getElementById(options.idPrefix+'close'), Main.closeFn);
+        Utils.addClickHandler(document.getElementById(options.idPrefix+'info'), Main.infoFn);
 
         // Call callback
         if(typeof options.callbacks.onVisible === 'function') options.callbacks.onVisible();
@@ -312,6 +270,7 @@
 
   var options = {
     elementId: '',
+    idPrefix:'eu-cookie-',
     acceptTimeout: 0,    
     frequencyCap: 0,
     policyUrl:'/privacypolicy',
