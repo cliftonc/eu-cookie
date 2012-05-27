@@ -150,54 +150,54 @@
      */
     var Templates = {
       html:"\
-        <style> \
-           #<%= idPrefix %>container { \
-              position: <%= position %>; \
-              <%= topOrBottom === 'bottom' ? 'bottom: 0px;' : 'top: 0px' %>; \
-              left: 0px; \
-              padding: 10px; \
-              width: 100%; \
-              background-color: <%= color.background %>; \
-              font-family: Arial, sans-serif; \
-              font-size: 13px; \
-              font-weight: normal; \
-              color: <%= color.text %>; \
-              letter-spacing: 0.5px; \
-              webkit-user-select: none; \
-              moz-user-select: none; \
-              user-select: none; \
-              z-index: 100;     \
-           }  \
-           #<%= idPrefix %>container a { \
-              color: <%= color.link %>; \
-              text-decoration: none; \
-           }\
-           #<%= idPrefix %>container a:hover { \
-              color: <%= color.linkHover%>; \
-           }\
-           #<%= idPrefix %>info { \
-              display: <%= copy.info ? 'inline' : 'none' %>;\
-              margin-left: 20px;\
-           }\
-           #<%= idPrefix %>accept { \
-              display: <%= copy.accept ? 'inline' : 'none' %>;\
-              padding-left: 10px;\
-              margin-left: 10px;\
-           }\
-           #<%= idPrefix %>close { \
-              display: <%= copy.close ? 'inline' : 'none' %>;\
-              font-weight: bold;\
-              margin-right:20px; \
-              float: right;\
-           }\
-        </style>\
-        <div id='<%= idPrefix %>container'>\
-          <span><%= copy.notice %></span>  \
-          <a href='#' title='<%= copy.infoTooltip %>' id='<%= idPrefix %>info'><%= copy.info %></a> \
-          <a href='#' title='<%= copy.acceptTooltip %>' id='<%= idPrefix %>accept'><%= copy.accept %></a> \
-          <a href='#' title='<%= copy.closeTooltip %>' id='<%= idPrefix %>close'><%= copy.close %></a> \
-        </div> \
-      "
+<style> \
+ #<%= idPrefix %>container { \
+    position: <%= position %>; \
+    <%= topOrBottom === 'bottom' ? 'bottom: 0px;' : 'top: 0px' %>; \
+    left: 0px; \
+    padding: 10px; \
+    width: 100%; \
+    background-color: <%= color.background %>; \
+    font-family: Arial, sans-serif; \
+    font-size: 13px; \
+    font-weight: normal; \
+    color: <%= color.text %>; \
+    letter-spacing: 0.5px; \
+    webkit-user-select: none; \
+    moz-user-select: none; \
+    user-select: none; \
+    z-index: 100;     \
+ }  \
+ #<%= idPrefix %>container a { \
+    color: <%= color.link %>; \
+    text-decoration: none; \
+ }\
+ #<%= idPrefix %>container a:hover { \
+    color: <%= color.linkHover%>; \
+ }\
+ #<%= idPrefix %>info { \
+    display: <%= copy.info ? 'inline' : 'none' %>;\
+    margin-left: 20px;\
+ }\
+ #<%= idPrefix %>accept { \
+    display: <%= copy.accept ? 'inline' : 'none' %>;\
+    padding-left: 10px;\
+    margin-left: 10px;\
+ }\
+ #<%= idPrefix %>close { \
+    display: <%= copy.close ? 'inline' : 'none' %>;\
+    font-weight: bold;\
+    margin-right:20px; \
+    float: right;\
+ }\
+</style>\
+<div id='<%= idPrefix %>container'>\
+  <span><%= copy.notice %></span>  \
+  <a href='#' title='<%= copy.infoTooltip %>' id='<%= idPrefix %>info'><%= copy.info %></a> \
+  <a href='#' title='<%= copy.acceptTooltip %>' id='<%= idPrefix %>accept'><%= copy.accept %></a> \
+  <a href='#' title='<%= copy.closeTooltip %>' id='<%= idPrefix %>close'><%= copy.close %></a> \
+</div> \
+"
     }
 
     var Main = {
